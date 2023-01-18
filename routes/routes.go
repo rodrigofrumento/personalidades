@@ -4,10 +4,14 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/rodrigofrumento/personalidades/controllers"
 )
 
 func HandleRequest() {
-	http.HandleFunc("/", controllers.Home)
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	r := mux.NewRouter()
+	r.HandleFunc("/", controllers.Home)
+	r.HandleFunc("/personalidades", controllers.TodasPersonalidades).Methods("Get")
+	r.HandleFunc("/personalidades/{id}", controllers.RetornaUmaPersonalidade).Methods("Get")
+	log.Fatal(http.ListenAndServe(":8000", r))
 }
